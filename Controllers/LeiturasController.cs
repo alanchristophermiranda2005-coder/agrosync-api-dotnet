@@ -43,6 +43,34 @@ public class LeiturasController : ControllerBase
         return Ok(ToResponse(leitura));
     }
 
+    [HttpPost]
+    public async Task<ActionResult<LeituraSoloResponse>> Create(LeituraSoloRequest request)
+    {
+        var area = await _context.Areas.FindAsync(request.AreaId);
+        if (area is null)
+            return AreaNaoEncontrada(request.AreaId);
+
+        var leitura = new LeituraSolo
+        {
+            AreaId = request.AreaId,
+            UmidadePercentual = request.UmidadePercentual,
+            DataHora = request.DataHora ?? DateTime.UtcNow,
+            Origem = request.Origem,
+            DispositivoId = request.DispositivoId
+        };
+
+        _context.Leituras.Add(leitura);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetById), new { id = leitura.Id }, ToResponse(leitura));
+    }
+
+    private ActionResult AreaNaoEncontrada(int areaId)
+    {
+        ModelState.AddModelError(nameof(LeituraSoloRequest.AreaId), $"A área {areaId} não existe.");
+        return ValidationProblem(ModelState);
+    }
+
     private static LeituraSoloResponse ToResponse(LeituraSolo l) =>
         new(l.Id, l.AreaId, l.UmidadePercentual, l.DataHora, l.Origem, l.DispositivoId);
 }
