@@ -76,6 +76,20 @@ public class AreasController : ControllerBase
         return NoContent();
     }
 
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var area = await _context.Areas.FindAsync(id);
+
+        if (area is null)
+            return NotFound(new { mensagem = $"Área {id} não encontrada." });
+
+        _context.Areas.Remove(area);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
     private static AreaResponse ToResponse(Area area) =>
         new(area.Id, area.Nome, area.TamanhoHectares, area.Latitude, area.Longitude);
 }
