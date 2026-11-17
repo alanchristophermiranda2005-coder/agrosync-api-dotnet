@@ -71,6 +71,29 @@ public class LeiturasController : ControllerBase
         return ValidationProblem(ModelState);
     }
 
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, LeituraSoloRequest request)
+    {
+        var leitura = await _context.Leituras.FindAsync(id);
+
+        if (leitura is null)
+            return NotFound(new { mensagem = $"Leitura {id} não encontrada." });
+
+        var area = await _context.Areas.FindAsync(request.AreaId);
+        if (area is null)
+            return AreaNaoEncontrada(request.AreaId);
+
+        leitura.AreaId = request.AreaId;
+        leitura.UmidadePercentual = request.UmidadePercentual;
+        leitura.DataHora = request.DataHora ?? leitura.DataHora;
+        leitura.Origem = request.Origem;
+        leitura.DispositivoId = request.DispositivoId;
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
     private static LeituraSoloResponse ToResponse(LeituraSolo l) =>
         new(l.Id, l.AreaId, l.UmidadePercentual, l.DataHora, l.Origem, l.DispositivoId);
 }
