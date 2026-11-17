@@ -58,6 +58,24 @@ public class AreasController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = area.Id }, ToResponse(area));
     }
 
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, AreaRequest request)
+    {
+        var area = await _context.Areas.FindAsync(id);
+
+        if (area is null)
+            return NotFound(new { mensagem = $"Área {id} não encontrada." });
+
+        area.Nome = request.Nome;
+        area.TamanhoHectares = request.TamanhoHectares;
+        area.Latitude = request.Latitude;
+        area.Longitude = request.Longitude;
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
     private static AreaResponse ToResponse(Area area) =>
         new(area.Id, area.Nome, area.TamanhoHectares, area.Latitude, area.Longitude);
 }
