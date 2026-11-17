@@ -41,6 +41,23 @@ public class AreasController : ControllerBase
         return Ok(ToResponse(area));
     }
 
+    [HttpPost]
+    public async Task<ActionResult<AreaResponse>> Create(AreaRequest request)
+    {
+        var area = new Area
+        {
+            Nome = request.Nome,
+            TamanhoHectares = request.TamanhoHectares,
+            Latitude = request.Latitude,
+            Longitude = request.Longitude
+        };
+
+        _context.Areas.Add(area);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetById), new { id = area.Id }, ToResponse(area));
+    }
+
     private static AreaResponse ToResponse(Area area) =>
         new(area.Id, area.Nome, area.TamanhoHectares, area.Latitude, area.Longitude);
 }
