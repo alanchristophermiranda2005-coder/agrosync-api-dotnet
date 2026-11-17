@@ -94,6 +94,20 @@ public class LeiturasController : ControllerBase
         return NoContent();
     }
 
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var leitura = await _context.Leituras.FindAsync(id);
+
+        if (leitura is null)
+            return NotFound(new { mensagem = $"Leitura {id} não encontrada." });
+
+        _context.Leituras.Remove(leitura);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
     private static LeituraSoloResponse ToResponse(LeituraSolo l) =>
         new(l.Id, l.AreaId, l.UmidadePercentual, l.DataHora, l.Origem, l.DispositivoId);
 }
