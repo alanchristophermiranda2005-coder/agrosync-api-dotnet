@@ -18,7 +18,6 @@ não no achismo. Esta API é o módulo de **monitoramento de solo**: cadastra as
 guardando tudo no Oracle da FIAP.
 
 - **Cidadão beneficiado:** pequeno produtor rural.
-- **ODS relacionados:** [ajustar ao documento do grupo, ex.: ODS 2 e ODS 13]
 
 ## Tecnologias
 
