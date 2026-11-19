@@ -1,6 +1,6 @@
 ﻿# AgroSync — API .NET
 
-Global Solution 2026/2 · CitizenTech · Advanced Business Development with .NET
+Global Solution 2026 · CitizenTech · Advanced Business Development with .NET
 
 ## Integrantes
 
